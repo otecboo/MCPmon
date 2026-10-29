@@ -1389,6 +1389,14 @@
         },
         "result": {
           "description": "Current response result, with the same structure as the `result` object in an MCP response.\nAvailable only during response-phase CEL guardrails."
+        },
+        "history": {
+          "description": "`tools/call` invocations recorded before the current request, oldest first.\nAvailable only during request-phase CEL guardrails.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": true
         }
       },
       "additionalProperties": false

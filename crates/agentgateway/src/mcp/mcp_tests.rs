@@ -9790,3 +9790,87 @@ async fn mcp_guardrails_history_detects_sequence() {
 		.text;
 	assert_eq!(text, "sequence denied");
 }
+
+// Declarative sequence rules: the call that completes the pattern is the one denied.
+#[tokio::test]
+async fn mcp_guardrails_sequence_pattern_denied() {
+	use std::collections::HashMap;
+
+	use crate::mcp::guardrails::sequence::{SequenceAction, SequenceProcessor, SequenceRule};
+	use crate::mcp::guardrails::{McpGuardrails, Phase, Processor, ProcessorKind};
+
+	let rule = BackendTrafficPolicy::McpGuardrails(Arc::new(McpGuardrails {
+		processors: vec![Processor {
+			methods: HashMap::from([("tools/call".to_string(), Phase::Request)]),
+			kind: ProcessorKind::Sequence(SequenceProcessor {
+				rules: vec![SequenceRule::DenyPattern(vec![
+					"increment".to_string(),
+					"decrement".to_string(),
+					"echo".to_string(),
+				])],
+				action: SequenceAction::Reject,
+			}),
+		}],
+	}));
+
+	let mock = mock_streamable_http_server(true).await;
+	let (_bind, io) = setup_proxy_policies(&mock, true, false, vec![rule]).await;
+	let client = mcp_streamable_client(io).await;
+
+	for tool in ["increment", "decrement"] {
+		client
+			.call_tool(rmcp::model::CallToolRequestParams::new(tool))
+			.await
+			.expect("prefix calls of the pattern are allowed");
+	}
+
+	let denied = client
+		.call_tool(rmcp::model::CallToolRequestParams::new("echo"))
+		.await
+		.expect("a sequence denial is reported as a tool error result");
+	assert_eq!(denied.is_error, Some(true));
+	let text = &denied.content[0]
+		.as_text()
+		.expect("denial carries text content")
+		.text;
+	assert_eq!(
+		text,
+		"sequence policy denied: denyPattern(increment -> decrement -> echo)"
+	);
+}
+
+// `action: flag` reports the match but must not block the call.
+#[tokio::test]
+async fn mcp_guardrails_sequence_flag_allows_call() {
+	use std::collections::HashMap;
+
+	use crate::mcp::guardrails::sequence::{SequenceAction, SequenceProcessor, SequenceRule};
+	use crate::mcp::guardrails::{McpGuardrails, Phase, Processor, ProcessorKind};
+
+	let rule = BackendTrafficPolicy::McpGuardrails(Arc::new(McpGuardrails {
+		processors: vec![Processor {
+			methods: HashMap::from([("tools/call".to_string(), Phase::Request)]),
+			kind: ProcessorKind::Sequence(SequenceProcessor {
+				rules: vec![SequenceRule::DenyAfter {
+					before: "increment".to_string(),
+					after: "echo".to_string(),
+				}],
+				action: SequenceAction::Flag,
+			}),
+		}],
+	}));
+
+	let mock = mock_streamable_http_server(true).await;
+	let (_bind, io) = setup_proxy_policies(&mock, true, false, vec![rule]).await;
+	let client = mcp_streamable_client(io).await;
+
+	client
+		.call_tool(rmcp::model::CallToolRequestParams::new("increment"))
+		.await
+		.expect("first call is allowed");
+	let flagged = client
+		.call_tool(rmcp::model::CallToolRequestParams::new("echo"))
+		.await
+		.expect("a flagged sequence must not reject the call");
+	assert_ne!(flagged.is_error, Some(true));
+}

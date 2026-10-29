@@ -1,0 +1,41 @@
+# yaml-language-server: $schema=https://agentgateway.dev/schema/config
+#
+# Declarative sequence rules. Each processor is evaluated against the `tools/call`
+# chain recorded for the current principal + backend, so a rule can forbid a call
+# because of what the agent did earlier in the same session.
+#
+# Rule shapes:
+#   denyTool: tool                  -- the tool may never be called
+#   denyAfter: {before, after}      -- `after` is denied once `before` was seen earlier
+#   denyPattern: [a, b, c]          -- denied at the call that completes the pattern
+#
+# `action: reject` (default) denies the call; `action: flag` records the match in
+# `mcpGuardrails.anomaly` and lets the call through.
+mcp:
+  port: 3000
+  policies:
+    cors:
+      allowOrigins: ["*"]
+      allowHeaders: ["*"]
+      exposeHeaders: ["Mcp-Session-Id"]
+    mcpGuardrails:
+      processors:
+      # Staged exfiltration: read, archive, then upload. Denied at the last step.
+      - kind: sequence
+        methods: {"tools/call": request}
+        action: reject
+        rules:
+        - denyPattern: [increment, decrement, echo]
+        - denyAfter: {before: increment, after: echo}
+
+      # Same engine in audit mode: report, never block.
+      - kind: sequence
+        methods: {"tools/call": request}
+        action: flag
+        rules:
+        - denyTool: shell_exec
+  targets:
+  - name: everything
+    stdio:
+      cmd: npx
+      args: ["-y", "@modelcontextprotocol/server-everything"]

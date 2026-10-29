@@ -263,6 +263,14 @@
 |`binds[].listeners[].routes[].policies.mcpGuardrails.processors[].transform`|string|Returns a replacement body (`mcp.params` on requests or `mcp.result` on responses).<br>Use `merge` to preserve fields you do not wish to mutate; `null` leaves the body unchanged.|
 |`binds[].listeners[].routes[].policies.mcpGuardrails.processors[].condition`|string|Condition gating the action; absent means always.|
 |`binds[].listeners[].routes[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `expression`.|
+|`binds[].listeners[].routes[].policies.mcpGuardrails.processors[].rules`|[]object|Rules are tried in order; the first match decides. An empty list is rejected at<br>config-load time by `load_warnings`.|
+|`binds[].listeners[].routes[].policies.mcpGuardrails.processors[].rules[].denyTool`|string|The agent may never call this tool.|
+|`binds[].listeners[].routes[].policies.mcpGuardrails.processors[].rules[].denyAfter`|object|Deny `after` once `before` was called earlier in the same session.|
+|`binds[].listeners[].routes[].policies.mcpGuardrails.processors[].rules[].denyAfter.before`|string||
+|`binds[].listeners[].routes[].policies.mcpGuardrails.processors[].rules[].denyAfter.after`|string||
+|`binds[].listeners[].routes[].policies.mcpGuardrails.processors[].rules[].denyPattern`|[]string|Deny the call that makes the chain end with this sequence.|
+|`binds[].listeners[].routes[].policies.mcpGuardrails.processors[].action`|enum|What to do on a match. Defaults to `reject`.<br>Possible values: `reject`, `flag`.|
+|`binds[].listeners[].routes[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `sequence`.|
 |`binds[].listeners[].routes[].policies.mcpGuardrails.processors[].methods`|object|Allowlist: only methods listed here run through this processor, at the<br>configured phase. Keys may be exact (`tools/call`), prefix (`tools/*`),<br>or suffix (`*/list`) wildcards, or `*` for all methods. Methods matching<br>no key bypass this processor; see [`phase::resolve`] for match precedence.|
 |`binds[].listeners[].routes[].policies.authorization`|object|Authorization rules for incoming HTTP requests.|
 |`binds[].listeners[].routes[].policies.authorization.rules`|[]object|CEL authorization rules to evaluate for a request.|
@@ -885,6 +893,14 @@
 |`binds[].listeners[].routes[].backends[].ai.policies.mcpGuardrails.processors[].transform`|string|Returns a replacement body (`mcp.params` on requests or `mcp.result` on responses).<br>Use `merge` to preserve fields you do not wish to mutate; `null` leaves the body unchanged.|
 |`binds[].listeners[].routes[].backends[].ai.policies.mcpGuardrails.processors[].condition`|string|Condition gating the action; absent means always.|
 |`binds[].listeners[].routes[].backends[].ai.policies.mcpGuardrails.processors[].kind`|enum|Possible values: `expression`.|
+|`binds[].listeners[].routes[].backends[].ai.policies.mcpGuardrails.processors[].rules`|[]object|Rules are tried in order; the first match decides. An empty list is rejected at<br>config-load time by `load_warnings`.|
+|`binds[].listeners[].routes[].backends[].ai.policies.mcpGuardrails.processors[].rules[].denyTool`|string|The agent may never call this tool.|
+|`binds[].listeners[].routes[].backends[].ai.policies.mcpGuardrails.processors[].rules[].denyAfter`|object|Deny `after` once `before` was called earlier in the same session.|
+|`binds[].listeners[].routes[].backends[].ai.policies.mcpGuardrails.processors[].rules[].denyAfter.before`|string||
+|`binds[].listeners[].routes[].backends[].ai.policies.mcpGuardrails.processors[].rules[].denyAfter.after`|string||
+|`binds[].listeners[].routes[].backends[].ai.policies.mcpGuardrails.processors[].rules[].denyPattern`|[]string|Deny the call that makes the chain end with this sequence.|
+|`binds[].listeners[].routes[].backends[].ai.policies.mcpGuardrails.processors[].action`|enum|What to do on a match. Defaults to `reject`.<br>Possible values: `reject`, `flag`.|
+|`binds[].listeners[].routes[].backends[].ai.policies.mcpGuardrails.processors[].kind`|enum|Possible values: `sequence`.|
 |`binds[].listeners[].routes[].backends[].ai.policies.mcpGuardrails.processors[].methods`|object|Allowlist: only methods listed here run through this processor, at the<br>configured phase. Keys may be exact (`tools/call`), prefix (`tools/*`),<br>or suffix (`*/list`) wildcards, or `*` for all methods. Methods matching<br>no key bypass this processor; see [`phase::resolve`] for match precedence.|
 |`binds[].listeners[].routes[].backends[].ai.policies.a2a`|object|Mark this traffic as A2A to enable A2A processing and telemetry.|
 |`binds[].listeners[].routes[].backends[].ai.policies.inferenceRouting`|object|Route requests through an endpoint picker before forwarding to this backend.|
@@ -1095,6 +1111,14 @@
 |`binds[].listeners[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].transform`|string|Returns a replacement body (`mcp.params` on requests or `mcp.result` on responses).<br>Use `merge` to preserve fields you do not wish to mutate; `null` leaves the body unchanged.|
 |`binds[].listeners[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].condition`|string|Condition gating the action; absent means always.|
 |`binds[].listeners[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `expression`.|
+|`binds[].listeners[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules`|[]object|Rules are tried in order; the first match decides. An empty list is rejected at<br>config-load time by `load_warnings`.|
+|`binds[].listeners[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules[].denyTool`|string|The agent may never call this tool.|
+|`binds[].listeners[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules[].denyAfter`|object|Deny `after` once `before` was called earlier in the same session.|
+|`binds[].listeners[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules[].denyAfter.before`|string||
+|`binds[].listeners[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules[].denyAfter.after`|string||
+|`binds[].listeners[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules[].denyPattern`|[]string|Deny the call that makes the chain end with this sequence.|
+|`binds[].listeners[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].action`|enum|What to do on a match. Defaults to `reject`.<br>Possible values: `reject`, `flag`.|
+|`binds[].listeners[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `sequence`.|
 |`binds[].listeners[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].methods`|object|Allowlist: only methods listed here run through this processor, at the<br>configured phase. Keys may be exact (`tools/call`), prefix (`tools/*`),<br>or suffix (`*/list`) wildcards, or `*` for all methods. Methods matching<br>no key bypass this processor; see [`phase::resolve`] for match precedence.|
 |`binds[].listeners[].routes[].backends[].ai.groups[].providers[].policies.a2a`|object|Mark this traffic as A2A to enable A2A processing and telemetry.|
 |`binds[].listeners[].routes[].backends[].ai.groups[].providers[].policies.inferenceRouting`|object|Route requests through an endpoint picker before forwarding to this backend.|
@@ -1267,6 +1291,14 @@
 |`binds[].listeners[].routes[].backends[].policies.mcpGuardrails.processors[].transform`|string|Returns a replacement body (`mcp.params` on requests or `mcp.result` on responses).<br>Use `merge` to preserve fields you do not wish to mutate; `null` leaves the body unchanged.|
 |`binds[].listeners[].routes[].backends[].policies.mcpGuardrails.processors[].condition`|string|Condition gating the action; absent means always.|
 |`binds[].listeners[].routes[].backends[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `expression`.|
+|`binds[].listeners[].routes[].backends[].policies.mcpGuardrails.processors[].rules`|[]object|Rules are tried in order; the first match decides. An empty list is rejected at<br>config-load time by `load_warnings`.|
+|`binds[].listeners[].routes[].backends[].policies.mcpGuardrails.processors[].rules[].denyTool`|string|The agent may never call this tool.|
+|`binds[].listeners[].routes[].backends[].policies.mcpGuardrails.processors[].rules[].denyAfter`|object|Deny `after` once `before` was called earlier in the same session.|
+|`binds[].listeners[].routes[].backends[].policies.mcpGuardrails.processors[].rules[].denyAfter.before`|string||
+|`binds[].listeners[].routes[].backends[].policies.mcpGuardrails.processors[].rules[].denyAfter.after`|string||
+|`binds[].listeners[].routes[].backends[].policies.mcpGuardrails.processors[].rules[].denyPattern`|[]string|Deny the call that makes the chain end with this sequence.|
+|`binds[].listeners[].routes[].backends[].policies.mcpGuardrails.processors[].action`|enum|What to do on a match. Defaults to `reject`.<br>Possible values: `reject`, `flag`.|
+|`binds[].listeners[].routes[].backends[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `sequence`.|
 |`binds[].listeners[].routes[].backends[].policies.mcpGuardrails.processors[].methods`|object|Allowlist: only methods listed here run through this processor, at the<br>configured phase. Keys may be exact (`tools/call`), prefix (`tools/*`),<br>or suffix (`*/list`) wildcards, or `*` for all methods. Methods matching<br>no key bypass this processor; see [`phase::resolve`] for match precedence.|
 |`binds[].listeners[].routes[].backends[].policies.a2a`|object|Mark this traffic as A2A to enable A2A processing and telemetry.|
 |`binds[].listeners[].routes[].backends[].policies.inferenceRouting`|object|Route requests through an endpoint picker before forwarding to this backend.|
@@ -1822,6 +1854,14 @@
 |`policies[].policy.mcpGuardrails.processors[].transform`|string|Returns a replacement body (`mcp.params` on requests or `mcp.result` on responses).<br>Use `merge` to preserve fields you do not wish to mutate; `null` leaves the body unchanged.|
 |`policies[].policy.mcpGuardrails.processors[].condition`|string|Condition gating the action; absent means always.|
 |`policies[].policy.mcpGuardrails.processors[].kind`|enum|Possible values: `expression`.|
+|`policies[].policy.mcpGuardrails.processors[].rules`|[]object|Rules are tried in order; the first match decides. An empty list is rejected at<br>config-load time by `load_warnings`.|
+|`policies[].policy.mcpGuardrails.processors[].rules[].denyTool`|string|The agent may never call this tool.|
+|`policies[].policy.mcpGuardrails.processors[].rules[].denyAfter`|object|Deny `after` once `before` was called earlier in the same session.|
+|`policies[].policy.mcpGuardrails.processors[].rules[].denyAfter.before`|string||
+|`policies[].policy.mcpGuardrails.processors[].rules[].denyAfter.after`|string||
+|`policies[].policy.mcpGuardrails.processors[].rules[].denyPattern`|[]string|Deny the call that makes the chain end with this sequence.|
+|`policies[].policy.mcpGuardrails.processors[].action`|enum|What to do on a match. Defaults to `reject`.<br>Possible values: `reject`, `flag`.|
+|`policies[].policy.mcpGuardrails.processors[].kind`|enum|Possible values: `sequence`.|
 |`policies[].policy.mcpGuardrails.processors[].methods`|object|Allowlist: only methods listed here run through this processor, at the<br>configured phase. Keys may be exact (`tools/call`), prefix (`tools/*`),<br>or suffix (`*/list`) wildcards, or `*` for all methods. Methods matching<br>no key bypass this processor; see [`phase::resolve`] for match precedence.|
 |`policies[].policy.authorization`|object|Authorization rules for incoming HTTP requests.|
 |`policies[].policy.authorization.rules`|[]object|CEL authorization rules to evaluate for a request.|
@@ -2444,6 +2484,14 @@
 |`backends[].ai.policies.mcpGuardrails.processors[].transform`|string|Returns a replacement body (`mcp.params` on requests or `mcp.result` on responses).<br>Use `merge` to preserve fields you do not wish to mutate; `null` leaves the body unchanged.|
 |`backends[].ai.policies.mcpGuardrails.processors[].condition`|string|Condition gating the action; absent means always.|
 |`backends[].ai.policies.mcpGuardrails.processors[].kind`|enum|Possible values: `expression`.|
+|`backends[].ai.policies.mcpGuardrails.processors[].rules`|[]object|Rules are tried in order; the first match decides. An empty list is rejected at<br>config-load time by `load_warnings`.|
+|`backends[].ai.policies.mcpGuardrails.processors[].rules[].denyTool`|string|The agent may never call this tool.|
+|`backends[].ai.policies.mcpGuardrails.processors[].rules[].denyAfter`|object|Deny `after` once `before` was called earlier in the same session.|
+|`backends[].ai.policies.mcpGuardrails.processors[].rules[].denyAfter.before`|string||
+|`backends[].ai.policies.mcpGuardrails.processors[].rules[].denyAfter.after`|string||
+|`backends[].ai.policies.mcpGuardrails.processors[].rules[].denyPattern`|[]string|Deny the call that makes the chain end with this sequence.|
+|`backends[].ai.policies.mcpGuardrails.processors[].action`|enum|What to do on a match. Defaults to `reject`.<br>Possible values: `reject`, `flag`.|
+|`backends[].ai.policies.mcpGuardrails.processors[].kind`|enum|Possible values: `sequence`.|
 |`backends[].ai.policies.mcpGuardrails.processors[].methods`|object|Allowlist: only methods listed here run through this processor, at the<br>configured phase. Keys may be exact (`tools/call`), prefix (`tools/*`),<br>or suffix (`*/list`) wildcards, or `*` for all methods. Methods matching<br>no key bypass this processor; see [`phase::resolve`] for match precedence.|
 |`backends[].ai.policies.a2a`|object|Mark this traffic as A2A to enable A2A processing and telemetry.|
 |`backends[].ai.policies.inferenceRouting`|object|Route requests through an endpoint picker before forwarding to this backend.|
@@ -2654,6 +2702,14 @@
 |`backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].transform`|string|Returns a replacement body (`mcp.params` on requests or `mcp.result` on responses).<br>Use `merge` to preserve fields you do not wish to mutate; `null` leaves the body unchanged.|
 |`backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].condition`|string|Condition gating the action; absent means always.|
 |`backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `expression`.|
+|`backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules`|[]object|Rules are tried in order; the first match decides. An empty list is rejected at<br>config-load time by `load_warnings`.|
+|`backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules[].denyTool`|string|The agent may never call this tool.|
+|`backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules[].denyAfter`|object|Deny `after` once `before` was called earlier in the same session.|
+|`backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules[].denyAfter.before`|string||
+|`backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules[].denyAfter.after`|string||
+|`backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules[].denyPattern`|[]string|Deny the call that makes the chain end with this sequence.|
+|`backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].action`|enum|What to do on a match. Defaults to `reject`.<br>Possible values: `reject`, `flag`.|
+|`backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `sequence`.|
 |`backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].methods`|object|Allowlist: only methods listed here run through this processor, at the<br>configured phase. Keys may be exact (`tools/call`), prefix (`tools/*`),<br>or suffix (`*/list`) wildcards, or `*` for all methods. Methods matching<br>no key bypass this processor; see [`phase::resolve`] for match precedence.|
 |`backends[].ai.groups[].providers[].policies.a2a`|object|Mark this traffic as A2A to enable A2A processing and telemetry.|
 |`backends[].ai.groups[].providers[].policies.inferenceRouting`|object|Route requests through an endpoint picker before forwarding to this backend.|
@@ -2824,6 +2880,14 @@
 |`backends[].policies.mcpGuardrails.processors[].transform`|string|Returns a replacement body (`mcp.params` on requests or `mcp.result` on responses).<br>Use `merge` to preserve fields you do not wish to mutate; `null` leaves the body unchanged.|
 |`backends[].policies.mcpGuardrails.processors[].condition`|string|Condition gating the action; absent means always.|
 |`backends[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `expression`.|
+|`backends[].policies.mcpGuardrails.processors[].rules`|[]object|Rules are tried in order; the first match decides. An empty list is rejected at<br>config-load time by `load_warnings`.|
+|`backends[].policies.mcpGuardrails.processors[].rules[].denyTool`|string|The agent may never call this tool.|
+|`backends[].policies.mcpGuardrails.processors[].rules[].denyAfter`|object|Deny `after` once `before` was called earlier in the same session.|
+|`backends[].policies.mcpGuardrails.processors[].rules[].denyAfter.before`|string||
+|`backends[].policies.mcpGuardrails.processors[].rules[].denyAfter.after`|string||
+|`backends[].policies.mcpGuardrails.processors[].rules[].denyPattern`|[]string|Deny the call that makes the chain end with this sequence.|
+|`backends[].policies.mcpGuardrails.processors[].action`|enum|What to do on a match. Defaults to `reject`.<br>Possible values: `reject`, `flag`.|
+|`backends[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `sequence`.|
 |`backends[].policies.mcpGuardrails.processors[].methods`|object|Allowlist: only methods listed here run through this processor, at the<br>configured phase. Keys may be exact (`tools/call`), prefix (`tools/*`),<br>or suffix (`*/list`) wildcards, or `*` for all methods. Methods matching<br>no key bypass this processor; see [`phase::resolve`] for match precedence.|
 |`backends[].policies.a2a`|object|Mark this traffic as A2A to enable A2A processing and telemetry.|
 |`backends[].policies.inferenceRouting`|object|Route requests through an endpoint picker before forwarding to this backend.|
@@ -2958,6 +3022,14 @@
 |`routeGroups[].routes[].policies.mcpGuardrails.processors[].transform`|string|Returns a replacement body (`mcp.params` on requests or `mcp.result` on responses).<br>Use `merge` to preserve fields you do not wish to mutate; `null` leaves the body unchanged.|
 |`routeGroups[].routes[].policies.mcpGuardrails.processors[].condition`|string|Condition gating the action; absent means always.|
 |`routeGroups[].routes[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `expression`.|
+|`routeGroups[].routes[].policies.mcpGuardrails.processors[].rules`|[]object|Rules are tried in order; the first match decides. An empty list is rejected at<br>config-load time by `load_warnings`.|
+|`routeGroups[].routes[].policies.mcpGuardrails.processors[].rules[].denyTool`|string|The agent may never call this tool.|
+|`routeGroups[].routes[].policies.mcpGuardrails.processors[].rules[].denyAfter`|object|Deny `after` once `before` was called earlier in the same session.|
+|`routeGroups[].routes[].policies.mcpGuardrails.processors[].rules[].denyAfter.before`|string||
+|`routeGroups[].routes[].policies.mcpGuardrails.processors[].rules[].denyAfter.after`|string||
+|`routeGroups[].routes[].policies.mcpGuardrails.processors[].rules[].denyPattern`|[]string|Deny the call that makes the chain end with this sequence.|
+|`routeGroups[].routes[].policies.mcpGuardrails.processors[].action`|enum|What to do on a match. Defaults to `reject`.<br>Possible values: `reject`, `flag`.|
+|`routeGroups[].routes[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `sequence`.|
 |`routeGroups[].routes[].policies.mcpGuardrails.processors[].methods`|object|Allowlist: only methods listed here run through this processor, at the<br>configured phase. Keys may be exact (`tools/call`), prefix (`tools/*`),<br>or suffix (`*/list`) wildcards, or `*` for all methods. Methods matching<br>no key bypass this processor; see [`phase::resolve`] for match precedence.|
 |`routeGroups[].routes[].policies.authorization`|object|Authorization rules for incoming HTTP requests.|
 |`routeGroups[].routes[].policies.authorization.rules`|[]object|CEL authorization rules to evaluate for a request.|
@@ -3580,6 +3652,14 @@
 |`routeGroups[].routes[].backends[].ai.policies.mcpGuardrails.processors[].transform`|string|Returns a replacement body (`mcp.params` on requests or `mcp.result` on responses).<br>Use `merge` to preserve fields you do not wish to mutate; `null` leaves the body unchanged.|
 |`routeGroups[].routes[].backends[].ai.policies.mcpGuardrails.processors[].condition`|string|Condition gating the action; absent means always.|
 |`routeGroups[].routes[].backends[].ai.policies.mcpGuardrails.processors[].kind`|enum|Possible values: `expression`.|
+|`routeGroups[].routes[].backends[].ai.policies.mcpGuardrails.processors[].rules`|[]object|Rules are tried in order; the first match decides. An empty list is rejected at<br>config-load time by `load_warnings`.|
+|`routeGroups[].routes[].backends[].ai.policies.mcpGuardrails.processors[].rules[].denyTool`|string|The agent may never call this tool.|
+|`routeGroups[].routes[].backends[].ai.policies.mcpGuardrails.processors[].rules[].denyAfter`|object|Deny `after` once `before` was called earlier in the same session.|
+|`routeGroups[].routes[].backends[].ai.policies.mcpGuardrails.processors[].rules[].denyAfter.before`|string||
+|`routeGroups[].routes[].backends[].ai.policies.mcpGuardrails.processors[].rules[].denyAfter.after`|string||
+|`routeGroups[].routes[].backends[].ai.policies.mcpGuardrails.processors[].rules[].denyPattern`|[]string|Deny the call that makes the chain end with this sequence.|
+|`routeGroups[].routes[].backends[].ai.policies.mcpGuardrails.processors[].action`|enum|What to do on a match. Defaults to `reject`.<br>Possible values: `reject`, `flag`.|
+|`routeGroups[].routes[].backends[].ai.policies.mcpGuardrails.processors[].kind`|enum|Possible values: `sequence`.|
 |`routeGroups[].routes[].backends[].ai.policies.mcpGuardrails.processors[].methods`|object|Allowlist: only methods listed here run through this processor, at the<br>configured phase. Keys may be exact (`tools/call`), prefix (`tools/*`),<br>or suffix (`*/list`) wildcards, or `*` for all methods. Methods matching<br>no key bypass this processor; see [`phase::resolve`] for match precedence.|
 |`routeGroups[].routes[].backends[].ai.policies.a2a`|object|Mark this traffic as A2A to enable A2A processing and telemetry.|
 |`routeGroups[].routes[].backends[].ai.policies.inferenceRouting`|object|Route requests through an endpoint picker before forwarding to this backend.|
@@ -3790,6 +3870,14 @@
 |`routeGroups[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].transform`|string|Returns a replacement body (`mcp.params` on requests or `mcp.result` on responses).<br>Use `merge` to preserve fields you do not wish to mutate; `null` leaves the body unchanged.|
 |`routeGroups[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].condition`|string|Condition gating the action; absent means always.|
 |`routeGroups[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `expression`.|
+|`routeGroups[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules`|[]object|Rules are tried in order; the first match decides. An empty list is rejected at<br>config-load time by `load_warnings`.|
+|`routeGroups[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules[].denyTool`|string|The agent may never call this tool.|
+|`routeGroups[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules[].denyAfter`|object|Deny `after` once `before` was called earlier in the same session.|
+|`routeGroups[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules[].denyAfter.before`|string||
+|`routeGroups[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules[].denyAfter.after`|string||
+|`routeGroups[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules[].denyPattern`|[]string|Deny the call that makes the chain end with this sequence.|
+|`routeGroups[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].action`|enum|What to do on a match. Defaults to `reject`.<br>Possible values: `reject`, `flag`.|
+|`routeGroups[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `sequence`.|
 |`routeGroups[].routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].methods`|object|Allowlist: only methods listed here run through this processor, at the<br>configured phase. Keys may be exact (`tools/call`), prefix (`tools/*`),<br>or suffix (`*/list`) wildcards, or `*` for all methods. Methods matching<br>no key bypass this processor; see [`phase::resolve`] for match precedence.|
 |`routeGroups[].routes[].backends[].ai.groups[].providers[].policies.a2a`|object|Mark this traffic as A2A to enable A2A processing and telemetry.|
 |`routeGroups[].routes[].backends[].ai.groups[].providers[].policies.inferenceRouting`|object|Route requests through an endpoint picker before forwarding to this backend.|
@@ -3962,6 +4050,14 @@
 |`routeGroups[].routes[].backends[].policies.mcpGuardrails.processors[].transform`|string|Returns a replacement body (`mcp.params` on requests or `mcp.result` on responses).<br>Use `merge` to preserve fields you do not wish to mutate; `null` leaves the body unchanged.|
 |`routeGroups[].routes[].backends[].policies.mcpGuardrails.processors[].condition`|string|Condition gating the action; absent means always.|
 |`routeGroups[].routes[].backends[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `expression`.|
+|`routeGroups[].routes[].backends[].policies.mcpGuardrails.processors[].rules`|[]object|Rules are tried in order; the first match decides. An empty list is rejected at<br>config-load time by `load_warnings`.|
+|`routeGroups[].routes[].backends[].policies.mcpGuardrails.processors[].rules[].denyTool`|string|The agent may never call this tool.|
+|`routeGroups[].routes[].backends[].policies.mcpGuardrails.processors[].rules[].denyAfter`|object|Deny `after` once `before` was called earlier in the same session.|
+|`routeGroups[].routes[].backends[].policies.mcpGuardrails.processors[].rules[].denyAfter.before`|string||
+|`routeGroups[].routes[].backends[].policies.mcpGuardrails.processors[].rules[].denyAfter.after`|string||
+|`routeGroups[].routes[].backends[].policies.mcpGuardrails.processors[].rules[].denyPattern`|[]string|Deny the call that makes the chain end with this sequence.|
+|`routeGroups[].routes[].backends[].policies.mcpGuardrails.processors[].action`|enum|What to do on a match. Defaults to `reject`.<br>Possible values: `reject`, `flag`.|
+|`routeGroups[].routes[].backends[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `sequence`.|
 |`routeGroups[].routes[].backends[].policies.mcpGuardrails.processors[].methods`|object|Allowlist: only methods listed here run through this processor, at the<br>configured phase. Keys may be exact (`tools/call`), prefix (`tools/*`),<br>or suffix (`*/list`) wildcards, or `*` for all methods. Methods matching<br>no key bypass this processor; see [`phase::resolve`] for match precedence.|
 |`routeGroups[].routes[].backends[].policies.a2a`|object|Mark this traffic as A2A to enable A2A processing and telemetry.|
 |`routeGroups[].routes[].backends[].policies.inferenceRouting`|object|Route requests through an endpoint picker before forwarding to this backend.|
@@ -4585,6 +4681,14 @@
 |`routes[].policies.mcpGuardrails.processors[].transform`|string|Returns a replacement body (`mcp.params` on requests or `mcp.result` on responses).<br>Use `merge` to preserve fields you do not wish to mutate; `null` leaves the body unchanged.|
 |`routes[].policies.mcpGuardrails.processors[].condition`|string|Condition gating the action; absent means always.|
 |`routes[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `expression`.|
+|`routes[].policies.mcpGuardrails.processors[].rules`|[]object|Rules are tried in order; the first match decides. An empty list is rejected at<br>config-load time by `load_warnings`.|
+|`routes[].policies.mcpGuardrails.processors[].rules[].denyTool`|string|The agent may never call this tool.|
+|`routes[].policies.mcpGuardrails.processors[].rules[].denyAfter`|object|Deny `after` once `before` was called earlier in the same session.|
+|`routes[].policies.mcpGuardrails.processors[].rules[].denyAfter.before`|string||
+|`routes[].policies.mcpGuardrails.processors[].rules[].denyAfter.after`|string||
+|`routes[].policies.mcpGuardrails.processors[].rules[].denyPattern`|[]string|Deny the call that makes the chain end with this sequence.|
+|`routes[].policies.mcpGuardrails.processors[].action`|enum|What to do on a match. Defaults to `reject`.<br>Possible values: `reject`, `flag`.|
+|`routes[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `sequence`.|
 |`routes[].policies.mcpGuardrails.processors[].methods`|object|Allowlist: only methods listed here run through this processor, at the<br>configured phase. Keys may be exact (`tools/call`), prefix (`tools/*`),<br>or suffix (`*/list`) wildcards, or `*` for all methods. Methods matching<br>no key bypass this processor; see [`phase::resolve`] for match precedence.|
 |`routes[].policies.authorization`|object|Authorization rules for incoming HTTP requests.|
 |`routes[].policies.authorization.rules`|[]object|CEL authorization rules to evaluate for a request.|
@@ -5207,6 +5311,14 @@
 |`routes[].backends[].ai.policies.mcpGuardrails.processors[].transform`|string|Returns a replacement body (`mcp.params` on requests or `mcp.result` on responses).<br>Use `merge` to preserve fields you do not wish to mutate; `null` leaves the body unchanged.|
 |`routes[].backends[].ai.policies.mcpGuardrails.processors[].condition`|string|Condition gating the action; absent means always.|
 |`routes[].backends[].ai.policies.mcpGuardrails.processors[].kind`|enum|Possible values: `expression`.|
+|`routes[].backends[].ai.policies.mcpGuardrails.processors[].rules`|[]object|Rules are tried in order; the first match decides. An empty list is rejected at<br>config-load time by `load_warnings`.|
+|`routes[].backends[].ai.policies.mcpGuardrails.processors[].rules[].denyTool`|string|The agent may never call this tool.|
+|`routes[].backends[].ai.policies.mcpGuardrails.processors[].rules[].denyAfter`|object|Deny `after` once `before` was called earlier in the same session.|
+|`routes[].backends[].ai.policies.mcpGuardrails.processors[].rules[].denyAfter.before`|string||
+|`routes[].backends[].ai.policies.mcpGuardrails.processors[].rules[].denyAfter.after`|string||
+|`routes[].backends[].ai.policies.mcpGuardrails.processors[].rules[].denyPattern`|[]string|Deny the call that makes the chain end with this sequence.|
+|`routes[].backends[].ai.policies.mcpGuardrails.processors[].action`|enum|What to do on a match. Defaults to `reject`.<br>Possible values: `reject`, `flag`.|
+|`routes[].backends[].ai.policies.mcpGuardrails.processors[].kind`|enum|Possible values: `sequence`.|
 |`routes[].backends[].ai.policies.mcpGuardrails.processors[].methods`|object|Allowlist: only methods listed here run through this processor, at the<br>configured phase. Keys may be exact (`tools/call`), prefix (`tools/*`),<br>or suffix (`*/list`) wildcards, or `*` for all methods. Methods matching<br>no key bypass this processor; see [`phase::resolve`] for match precedence.|
 |`routes[].backends[].ai.policies.a2a`|object|Mark this traffic as A2A to enable A2A processing and telemetry.|
 |`routes[].backends[].ai.policies.inferenceRouting`|object|Route requests through an endpoint picker before forwarding to this backend.|
@@ -5417,6 +5529,14 @@
 |`routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].transform`|string|Returns a replacement body (`mcp.params` on requests or `mcp.result` on responses).<br>Use `merge` to preserve fields you do not wish to mutate; `null` leaves the body unchanged.|
 |`routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].condition`|string|Condition gating the action; absent means always.|
 |`routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `expression`.|
+|`routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules`|[]object|Rules are tried in order; the first match decides. An empty list is rejected at<br>config-load time by `load_warnings`.|
+|`routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules[].denyTool`|string|The agent may never call this tool.|
+|`routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules[].denyAfter`|object|Deny `after` once `before` was called earlier in the same session.|
+|`routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules[].denyAfter.before`|string||
+|`routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules[].denyAfter.after`|string||
+|`routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].rules[].denyPattern`|[]string|Deny the call that makes the chain end with this sequence.|
+|`routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].action`|enum|What to do on a match. Defaults to `reject`.<br>Possible values: `reject`, `flag`.|
+|`routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `sequence`.|
 |`routes[].backends[].ai.groups[].providers[].policies.mcpGuardrails.processors[].methods`|object|Allowlist: only methods listed here run through this processor, at the<br>configured phase. Keys may be exact (`tools/call`), prefix (`tools/*`),<br>or suffix (`*/list`) wildcards, or `*` for all methods. Methods matching<br>no key bypass this processor; see [`phase::resolve`] for match precedence.|
 |`routes[].backends[].ai.groups[].providers[].policies.a2a`|object|Mark this traffic as A2A to enable A2A processing and telemetry.|
 |`routes[].backends[].ai.groups[].providers[].policies.inferenceRouting`|object|Route requests through an endpoint picker before forwarding to this backend.|
@@ -5589,6 +5709,14 @@
 |`routes[].backends[].policies.mcpGuardrails.processors[].transform`|string|Returns a replacement body (`mcp.params` on requests or `mcp.result` on responses).<br>Use `merge` to preserve fields you do not wish to mutate; `null` leaves the body unchanged.|
 |`routes[].backends[].policies.mcpGuardrails.processors[].condition`|string|Condition gating the action; absent means always.|
 |`routes[].backends[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `expression`.|
+|`routes[].backends[].policies.mcpGuardrails.processors[].rules`|[]object|Rules are tried in order; the first match decides. An empty list is rejected at<br>config-load time by `load_warnings`.|
+|`routes[].backends[].policies.mcpGuardrails.processors[].rules[].denyTool`|string|The agent may never call this tool.|
+|`routes[].backends[].policies.mcpGuardrails.processors[].rules[].denyAfter`|object|Deny `after` once `before` was called earlier in the same session.|
+|`routes[].backends[].policies.mcpGuardrails.processors[].rules[].denyAfter.before`|string||
+|`routes[].backends[].policies.mcpGuardrails.processors[].rules[].denyAfter.after`|string||
+|`routes[].backends[].policies.mcpGuardrails.processors[].rules[].denyPattern`|[]string|Deny the call that makes the chain end with this sequence.|
+|`routes[].backends[].policies.mcpGuardrails.processors[].action`|enum|What to do on a match. Defaults to `reject`.<br>Possible values: `reject`, `flag`.|
+|`routes[].backends[].policies.mcpGuardrails.processors[].kind`|enum|Possible values: `sequence`.|
 |`routes[].backends[].policies.mcpGuardrails.processors[].methods`|object|Allowlist: only methods listed here run through this processor, at the<br>configured phase. Keys may be exact (`tools/call`), prefix (`tools/*`),<br>or suffix (`*/list`) wildcards, or `*` for all methods. Methods matching<br>no key bypass this processor; see [`phase::resolve`] for match precedence.|
 |`routes[].backends[].policies.a2a`|object|Mark this traffic as A2A to enable A2A processing and telemetry.|
 |`routes[].backends[].policies.inferenceRouting`|object|Route requests through an endpoint picker before forwarding to this backend.|
@@ -6300,6 +6428,14 @@
 |`mcp.policies.mcpGuardrails.processors[].transform`|string|Returns a replacement body (`mcp.params` on requests or `mcp.result` on responses).<br>Use `merge` to preserve fields you do not wish to mutate; `null` leaves the body unchanged.|
 |`mcp.policies.mcpGuardrails.processors[].condition`|string|Condition gating the action; absent means always.|
 |`mcp.policies.mcpGuardrails.processors[].kind`|enum|Possible values: `expression`.|
+|`mcp.policies.mcpGuardrails.processors[].rules`|[]object|Rules are tried in order; the first match decides. An empty list is rejected at<br>config-load time by `load_warnings`.|
+|`mcp.policies.mcpGuardrails.processors[].rules[].denyTool`|string|The agent may never call this tool.|
+|`mcp.policies.mcpGuardrails.processors[].rules[].denyAfter`|object|Deny `after` once `before` was called earlier in the same session.|
+|`mcp.policies.mcpGuardrails.processors[].rules[].denyAfter.before`|string||
+|`mcp.policies.mcpGuardrails.processors[].rules[].denyAfter.after`|string||
+|`mcp.policies.mcpGuardrails.processors[].rules[].denyPattern`|[]string|Deny the call that makes the chain end with this sequence.|
+|`mcp.policies.mcpGuardrails.processors[].action`|enum|What to do on a match. Defaults to `reject`.<br>Possible values: `reject`, `flag`.|
+|`mcp.policies.mcpGuardrails.processors[].kind`|enum|Possible values: `sequence`.|
 |`mcp.policies.mcpGuardrails.processors[].methods`|object|Allowlist: only methods listed here run through this processor, at the<br>configured phase. Keys may be exact (`tools/call`), prefix (`tools/*`),<br>or suffix (`*/list`) wildcards, or `*` for all methods. Methods matching<br>no key bypass this processor; see [`phase::resolve`] for match precedence.|
 |`mcp.policies.authorization`|object|Authorization rules for incoming HTTP requests.|
 |`mcp.policies.authorization.rules`|[]object|CEL authorization rules to evaluate for a request.|

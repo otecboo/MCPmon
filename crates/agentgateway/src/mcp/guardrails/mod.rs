@@ -39,6 +39,7 @@ mod client;
 mod expression;
 pub mod methods;
 pub mod phase;
+pub mod sequence;
 
 pub use phase::Phase;
 
@@ -84,6 +85,7 @@ pub struct Processor {
 pub enum ProcessorKind {
 	Remote(Remote),
 	Expression(ExpressionProcessor),
+	Sequence(sequence::SequenceProcessor),
 }
 
 /// In-process guardrail driven by CEL expressions.
@@ -124,6 +126,7 @@ impl McpGuardrails {
 			.iter()
 			.flat_map(|p| -> Box<dyn Iterator<Item = _>> {
 				match &p.kind {
+					ProcessorKind::Sequence(_) => Box::new(std::iter::empty::<&cel::Expression>()),
 					ProcessorKind::Remote(r) => Box::new(r.metadata.values().map(|e| e.as_ref())),
 					ProcessorKind::Expression(c) => {
 						let transform = match &c.action {
@@ -139,6 +142,24 @@ impl McpGuardrails {
 	/// Config warnings to surface at load time (xds diagnostics or logs).
 	pub fn load_warnings(&self) -> Vec<String> {
 		let mut out = Vec::new();
+		for processor in &self.processors {
+			let ProcessorKind::Sequence(sequence) = &processor.kind else {
+				continue;
+			};
+			if sequence.rules.is_empty() {
+				out.push("mcpGuardrails: sequence processor has no rules and will never match".to_string());
+			}
+			if processor
+				.methods
+				.values()
+				.any(|phase| *phase == Phase::Response)
+			{
+				out.push(
+					"mcpGuardrails: sequence processors only run on the request phase; response entries are ignored"
+						.to_string(),
+				);
+			}
+		}
 		for m in methods::REQUEST_PHASE_UNSUPPORTED {
 			if self.runs_request(m) {
 				out.push(format!(
@@ -338,6 +359,20 @@ impl Processor {
 		client: &PolicyClient,
 	) -> Outcome<P> {
 		match &self.kind {
+			ProcessorKind::Sequence(sequence) => {
+				let tool = ctx
+					.body
+					.parsed()
+					.and_then(|params| serde_json::to_value(params).ok())
+					.and_then(|params| {
+						params
+							.get("name")
+							.and_then(|name| name.as_str())
+							.map(str::to_owned)
+					});
+				sequence::check(sequence, ctx.method, tool.as_deref(), req_ctx)
+					.map_or(Outcome::Pass, Outcome::Reject)
+			},
 			ProcessorKind::Expression(c) => {
 				expression::check(c, ctx.method, &mut ctx.body, req_ctx, false)
 			},
@@ -364,6 +399,7 @@ impl Processor {
 		client: &PolicyClient,
 	) -> Outcome<rmcp::model::ServerResult> {
 		match &self.kind {
+			ProcessorKind::Sequence(_) => Outcome::Pass,
 			ProcessorKind::Expression(c) => expression::check(c, method, body, req_ctx, true),
 			ProcessorKind::Remote(remote) => {
 				client::check_response(remote, method, backends, body, req_ctx, client).await

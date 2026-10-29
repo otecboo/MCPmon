@@ -3101,6 +3101,32 @@
               ]
             }
           ]
+        },
+        {
+          "description": "Ordered rules plus the action taken when one matches.",
+          "type": "object",
+          "properties": {
+            "rules": {
+              "description": "Rules are tried in order; the first match decides. An empty list is rejected at\nconfig-load time by `load_warnings`.",
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/SequenceRule"
+              },
+              "default": []
+            },
+            "action": {
+              "description": "What to do on a match. Defaults to `reject`.",
+              "$ref": "#/$defs/SequenceAction",
+              "default": "reject"
+            },
+            "kind": {
+              "type": "string",
+              "const": "sequence"
+            }
+          },
+          "required": [
+            "kind"
+          ]
         }
       ],
       "unevaluatedProperties": false
@@ -5088,6 +5114,80 @@
     },
     "HeaderOrPseudo": {
       "type": "string"
+    },
+    "SequenceRule": {
+      "description": "One sequence rule. Externally tagged, so the YAML is `denyTool: name`,\n`denyAfter: {before: a, after: b}`, `denyPattern: [a, b, c]`.",
+      "oneOf": [
+        {
+          "description": "The agent may never call this tool.",
+          "type": "object",
+          "properties": {
+            "denyTool": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "denyTool"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "description": "Deny `after` once `before` was called earlier in the same session.",
+          "type": "object",
+          "properties": {
+            "denyAfter": {
+              "type": "object",
+              "properties": {
+                "before": {
+                  "type": "string"
+                },
+                "after": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "before",
+                "after"
+              ]
+            }
+          },
+          "required": [
+            "denyAfter"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "description": "Deny the call that makes the chain end with this sequence.",
+          "type": "object",
+          "properties": {
+            "denyPattern": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "denyPattern"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "SequenceAction": {
+      "oneOf": [
+        {
+          "description": "Reject the call with a JSON-RPC permission error.",
+          "type": "string",
+          "const": "reject"
+        },
+        {
+          "description": "Record the match in `mcpGuardrails.anomaly` and allow the call.",
+          "type": "string",
+          "const": "flag"
+        }
+      ]
     },
     "Authorization": {
       "$ref": "#/$defs/RuleSet"
