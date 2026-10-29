@@ -66,6 +66,12 @@ fn evaluate<P: serde::Serialize + serde::de::DeserializeOwned + std::fmt::Debug 
 				.then_some(body as &dyn ::cel::types::dynamic::DynamicType),
 		)
 	};
+	let exec = exec.with_mcp_history(
+		req_ctx
+			.extensions()
+			.get::<std::sync::Arc<crate::mcp::history::CallHistorySnapshot>>()
+			.map(|history| &history.entries),
+	);
 	if let Some(condition) = &c.condition {
 		match exec.eval(condition).map(|v| v.as_bool()) {
 			Ok(Ok(true)) => {},

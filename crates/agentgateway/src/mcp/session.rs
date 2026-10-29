@@ -640,6 +640,22 @@ impl Session {
 							l.set_tool(service_name.to_string(), tool.to_string());
 							l.capture_call_arguments(call_arguments);
 						});
+						// Sequence-level guardrails: hand the recorded `tools/call` chain to CEL as
+						// `mcp.history`. The current call stays available as `mcp.params`.
+						let history = ctx
+							.extensions()
+							.get::<Arc<mcp::history::McpHistoryStore>>()
+							.cloned();
+						let history_key = history.as_ref().and_then(|_| {
+							self
+								.relay
+								.backend_id
+								.as_ref()
+								.map(|backend| mcp::history::scope(backend, &ctx, ctr.extensions.get()))
+						});
+						if let (Some(store), Some(key)) = (history.as_ref(), history_key.as_ref()) {
+							ctx.extensions_mut().insert(store.snapshot(key));
+						}
 						let tn = tool.to_string();
 						ctr.params.name = tn.into();
 						Box::pin(self.authorize_with_ctx(
@@ -656,6 +672,12 @@ impl Session {
 							&name,
 						))
 						.await?;
+						// Only authorized calls enter the chain, so denied attempts cannot poison
+						// later decisions.
+						if let (Some(store), Some(key)) = (history.as_ref(), history_key.as_ref()) {
+							let record = mcp::history::CallRecord::new(&*service_name, tool);
+							store.record(key.clone(), record);
+						}
 						Box::pin(
 							self
 								.relay

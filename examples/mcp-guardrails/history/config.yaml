@@ -1,0 +1,44 @@
+# yaml-language-server: $schema=https://agentgateway.dev/schema/config
+#
+# Sequence-level guardrail: the rule does not look at a single message, it looks at
+# the chain of tool calls recorded for this principal and backend.
+#
+# `mcp.history` is the list of `tools/call` invocations that were already authorized
+# earlier in the same logical session, oldest first. Each entry has `target`, `tool`
+# and `timestamp` (milliseconds since the Unix epoch). The call being evaluated is not
+# in the list; it is available as `mcp.params`.
+#
+# Sessions are keyed by the authenticated principal (JWT `iss` + `sub`), falling back
+# to `mcp-session-id` for unauthenticated legacy clients. A client that wants to split
+# one agent conversation into its own chain can send
+# `_meta: {"agentsecuregateway.dev/conversationId": "..."}`.
+mcp:
+  port: 3000
+  policies:
+    cors:
+      allowOrigins: ["*"]
+      allowHeaders: ["*"]
+      exposeHeaders: ["Mcp-Session-Id"]
+    mcpGuardrails:
+      processors:
+      # Deny a write-ish call once the agent has read a secret in this session.
+      - kind: expression
+        methods: {"tools/call": request}
+        condition: >-
+          mcp.params.name == 'echo' &&
+          mcp.history.exists(h, h.tool == 'increment')
+        reject: "increment then echo is not allowed in one session"
+
+      # Same chain check expressed with the list API: at most two calls to `increment`
+      # are allowed, after that every further call is rejected.
+      - kind: expression
+        methods: {"tools/call": request}
+        condition: >-
+          mcp.params.name == 'increment' &&
+          mcp.history.filter(h, h.tool == 'increment').size() >= 2
+        reject: "increment was already called twice in this session"
+  targets:
+  - name: everything
+    stdio:
+      cmd: npx
+      args: ["-y", "@modelcontextprotocol/server-everything"]

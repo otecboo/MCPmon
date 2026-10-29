@@ -9744,3 +9744,49 @@ async fn modern_multi_target_resolve_propagates_meta() {
 		assert_eq!(&probe["params"]["_meta"][key], value, "{key}");
 	}
 }
+
+// Sequence policies: `mcp.history` exposes the recorded `tools/call` chain to CEL guardrails,
+// so a rule can forbid a call because of what the agent did earlier in the same session.
+#[tokio::test]
+async fn mcp_guardrails_history_detects_sequence() {
+	use std::collections::HashMap;
+
+	use crate::mcp::guardrails::{
+		ExpressionAction, ExpressionProcessor, McpGuardrails, Phase, Processor, ProcessorKind,
+	};
+
+	let rule = BackendTrafficPolicy::McpGuardrails(Arc::new(McpGuardrails {
+		processors: vec![Processor {
+			methods: HashMap::from([("tools/call".to_string(), Phase::Request)]),
+			kind: ProcessorKind::Expression(ExpressionProcessor {
+				condition: Some(Arc::new(
+					cel::Expression::new_strict(
+						r#"mcp.history.exists(h, h.tool == "increment") && mcp.params.name == "echo""#,
+					)
+					.expect("valid history expression"),
+				)),
+				action: ExpressionAction::Reject("sequence denied".to_string()),
+			}),
+		}],
+	}));
+
+	let mock = mock_streamable_http_server(true).await;
+	let (_bind, io) = setup_proxy_policies(&mock, true, false, vec![rule]).await;
+	let client = mcp_streamable_client(io).await;
+
+	client
+		.call_tool(rmcp::model::CallToolRequestParams::new("increment"))
+		.await
+		.expect("the first call is allowed and recorded");
+
+	let denied = client
+		.call_tool(rmcp::model::CallToolRequestParams::new("echo"))
+		.await
+		.expect("a guardrail reject is reported as a tool error result");
+	assert_eq!(denied.is_error, Some(true));
+	let text = &denied.content[0]
+		.as_text()
+		.expect("denial carries text content")
+		.text;
+	assert_eq!(text, "sequence denied");
+}

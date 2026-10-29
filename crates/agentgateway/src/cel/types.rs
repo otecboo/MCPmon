@@ -781,6 +781,17 @@ impl<'a> Executor<'a> {
 		self
 	}
 
+	/// Attaches the recorded `tools/call` history to `mcp.history`.
+	pub fn with_mcp_history(
+		mut self,
+		history: Option<&'a Vec<crate::mcp::history::CallRecord>>,
+	) -> Self {
+		if let Some(mcp) = self.mcp.as_mut() {
+			mcp.history = history;
+		}
+		self
+	}
+
 	pub fn eval(&'a self, expr: &'a Expression) -> Result<Value<'a>, Error> {
 		let resolver = ExecutorResolver { executor: self };
 		let start = dtrace::timed_start();

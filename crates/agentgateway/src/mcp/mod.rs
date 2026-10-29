@@ -3,6 +3,7 @@ pub(crate) mod auth;
 pub(crate) mod dns_rebinding;
 pub(crate) mod guardrails;
 mod handler;
+pub mod history;
 mod mergestream;
 mod rbac;
 mod router;
@@ -635,6 +636,11 @@ pub struct MCPView<'a> {
 	#[dynamic(skip_serializing_if = "Option::is_none")]
 	#[cfg_attr(feature = "schema", schemars(with = "Option<serde_json::Value>"))]
 	pub result: Option<&'a dyn ::cel::types::dynamic::DynamicType>,
+	/// `tools/call` invocations recorded before the current request, oldest first.
+	/// Available only during request-phase CEL guardrails.
+	#[dynamic(skip_serializing_if = "Option::is_none")]
+	#[cfg_attr(feature = "schema", schemars(with = "Option<Vec<serde_json::Value>>"))]
+	pub history: Option<&'a Vec<history::CallRecord>>,
 }
 
 impl<'a> MCPView<'a> {
@@ -643,7 +649,16 @@ impl<'a> MCPView<'a> {
 			info,
 			params: None,
 			result: None,
+			history: None,
 		}
+	}
+}
+
+impl<'a> MCPView<'a> {
+	/// Attaches the recorded `tools/call` history; see [`history::McpHistoryStore`].
+	pub fn with_history(mut self, history: Option<&'a Vec<history::CallRecord>>) -> Self {
+		self.history = history;
+		self
 	}
 }
 

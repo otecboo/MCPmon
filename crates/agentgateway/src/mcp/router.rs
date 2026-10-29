@@ -11,7 +11,7 @@ use crate::mcp::handler::RelayInputs;
 use crate::mcp::session::SessionManager;
 use crate::mcp::sse::LegacySSEService;
 use crate::mcp::streamablehttp::{StreamableHttpServerConfig, StreamableHttpService};
-use crate::mcp::{FailureMode, MCPInfo, McpAuthorizationSet, auth};
+use crate::mcp::{FailureMode, MCPInfo, McpAuthorizationSet, auth, history::McpHistoryStore};
 use crate::proxy::httpproxy::{MustSnapshot, PolicyClient};
 use crate::proxy::{ProxyError, ProxyResponse};
 use crate::store::{BackendPolicies, Stores};
@@ -26,12 +26,18 @@ use crate::{ProxyInputs, cel, mcp};
 pub struct App {
 	state: Stores,
 	session: Arc<SessionManager>,
+	history: Arc<McpHistoryStore>,
 }
 
 impl App {
 	pub fn new(state: Stores, encoder: Encoder) -> Self {
 		let session = crate::mcp::session::SessionManager::new(encoder);
-		Self { state, session }
+		let history = Arc::new(McpHistoryStore::new());
+		Self {
+			state,
+			session,
+			history,
+		}
 	}
 
 	pub fn should_passthrough(
@@ -137,6 +143,7 @@ impl App {
 		logy.store(Some(MCPInfo::default()));
 		req.extensions_mut().insert(logy);
 		req.extensions_mut().insert(log.mcp_guardrails.clone());
+		req.extensions_mut().insert(self.history.clone());
 
 		if backend.dns_rebinding_protection
 			&& let Some(resp) = mcp::dns_rebinding::reject_non_localhost(&req)

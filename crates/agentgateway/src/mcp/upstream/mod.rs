@@ -56,6 +56,10 @@ impl IncomingRequestContext {
 	pub fn headers_mut(&mut self) -> &mut http::HeaderMap {
 		self.request.headers_mut()
 	}
+
+	pub fn headers(&self) -> &http::HeaderMap {
+		self.request.headers()
+	}
 	pub fn with_mcp_target(mut self, target_name: &str) -> Self {
 		let mut mcp = self
 			.extensions()

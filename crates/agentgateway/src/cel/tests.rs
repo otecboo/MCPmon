@@ -722,6 +722,7 @@ fn mcp_view() {
 		info,
 		params: Some(&payload),
 		result: None,
+		history: None,
 	});
 	let mut expected = info.materialize().json().unwrap();
 	expected["params"] = payload.clone();
