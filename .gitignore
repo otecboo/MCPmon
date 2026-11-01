@@ -47,3 +47,7 @@ cfg.yaml
 .beads/proxieddb/
 
 /tools/.bin/
+eval/data/
+eval/results/
+__pycache__/
+*.pyc
